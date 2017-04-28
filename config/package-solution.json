@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "emi-pending-task-client-side-solution",
+    "id": "6096ca6a-fcec-4b5c-b8ee-77dcc8e22e30",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "zippedPackage": "solution/emi-pending-task.sppkg"
+  }
+}

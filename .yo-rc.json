@@ -1,0 +1,8 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "libraryName": "emi-pending-task",
+    "framework": "react",
+    "version": "1.0.0",
+    "libraryId": "6096ca6a-fcec-4b5c-b8ee-77dcc8e22e30"
+  }
+}

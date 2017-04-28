@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/emiPendingTasks/EmiPendingTasksWebPart.js",
+      "manifest": "./src/webparts/emiPendingTasks/EmiPendingTasksWebPart.manifest.json",
+      "outputPath": "./dist/emi-pending-tasks.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "emiPendingTasksStrings": "webparts/emiPendingTasks/loc/{locale}.js"
+  }
+}

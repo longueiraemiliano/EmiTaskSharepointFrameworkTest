@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+
+  "id": "6508f6da-6d61-42bc-9954-26b2f0f54e88",
+  "alias": "EmiPendingTasksWebPart",
+  "componentType": "WebPart",
+  "version": "0.0.1",
+  "manifestVersion": 2,
+
+  "preconfiguredEntries": [{
+    "groupId": "6508f6da-6d61-42bc-9954-26b2f0f54e88",
+    "group": { "default": "Under Development" },
+    "title": { "default": "Emi-Pending-Tasks" },
+    "description": { "default": "Emi pending&#39;s tasks" },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+      "description": "Emi-Pending-Tasks"
+    }
+  }]
+}
