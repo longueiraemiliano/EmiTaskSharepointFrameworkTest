@@ -61,10 +61,10 @@ export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IT
           <TableHeaderColumn dataField='StartDate'>Fecha de Inicio</TableHeaderColumn>
           <TableHeaderColumn dataField='DueDate'>Fecha de Vencimiento</TableHeaderColumn>
         </BootstrapTable>
-        </Panel>);
+      </Panel>);
 
     let tabsInstance = (
-      <Tabs defaultActiveKey={2}  id="uncontrolled-tab-example">
+      <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
         <Tab eventKey={1}  title="Tab 1">{taskTable}</Tab>
         <Tab eventKey={2}  title="Tab 2">Tab 2 content</Tab>
         <Tab eventKey={3} title="Tab 3" disabled>Tab 3 content</Tab>
@@ -72,7 +72,7 @@ export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IT
     );
 
     return (            
-      <div>
+      <div className="container">        
         {tabsInstance}        
       </div>
     );    
