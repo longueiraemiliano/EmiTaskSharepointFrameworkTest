@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
+import Root from './containers/Root';
+import RouteMap from './routes/index';
 import { Version } from '@microsoft/sp-core-library';
 import {
   BaseClientSideWebPart,
@@ -14,10 +16,10 @@ import { IEmiPendingTasksWebPartProps } from './IEmiPendingTasksWebPartProps';
 import { SPComponentLoader, ILoadScriptOptions } from '@microsoft/sp-loader';
 import { defer, IDeferred } from './utils/defer';
 
-export default class EmiPendingTasksWebPart extends BaseClientSideWebPart<IEmiPendingTasksWebPartProps> {
+export default class EmiPendingTasksWebPart extends BaseClientSideWebPart<any> {
 
   private _getElement(): React.ReactElement<ITasksSpfxProps> {
-		let pending = React.createElement(EmiPendingTasks, {
+		let pending = React.createElement(RouteMap, {
       context: this.context,
       title: this.properties.title,
       allTasks: false,
