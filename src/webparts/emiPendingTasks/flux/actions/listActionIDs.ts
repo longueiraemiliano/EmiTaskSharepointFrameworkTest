@@ -1,5 +1,6 @@
 enum listActionIDs {
-    TASKS_GET
+    TASKS_GET,
+    CONTACTS_GET
 }
 
 export default listActionIDs;

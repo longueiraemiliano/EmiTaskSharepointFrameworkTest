@@ -18,6 +18,14 @@ export class ListActionsStatic {
 			fields: fields
 		});
 	}
+
+	public getContacts(context: IWebPartContext, listName: string) {
+		appDispatcher.dispatch({
+			actionType: listActionIDs.CONTACTS_GET,
+			context: context,			
+            listName: listName,			
+		});
+	}
 }
 
 const listActions: ListActionsStatic = new ListActionsStatic();

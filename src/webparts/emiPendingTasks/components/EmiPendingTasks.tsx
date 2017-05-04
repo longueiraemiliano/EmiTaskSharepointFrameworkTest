@@ -8,6 +8,8 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import  listActions from '../flux/actions/listActions';
 import listStore from '../flux/stores/listStore';
 import { ITaskResult } from '../utils/ITaskResult';
+import PendingTasksTable from './PendingTasksTable/PendingTasksTable';
+import ContactsTable from './ContactsTable/ContactsTable';
 
 export interface ITasksSpfxProps extends IEmiPendingTasksWebPartProps {
 	context: IWebPartContext;
@@ -15,58 +17,46 @@ export interface ITasksSpfxProps extends IEmiPendingTasksWebPartProps {
   allTasks: Boolean; 	
 }
 
-export interface ITasksState {
-  results?: ITaskResult[];
+export interface IContainerState {
+  tasks?: ITaskResult[];
 	loaded?: Boolean;	
 }
 
-export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, ITasksState> {  
+export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IContainerState> {  
 
   constructor(props: ITasksSpfxProps, context: IWebPartContext) {
 		super(props, context);
 		this.state = {
-			results: [],
+			tasks: [],
 			loaded: false
 		};
     
-		this._onChange = this._onChange.bind(this);
+		this._onChangeTasks = this._onChangeTasks.bind(this);
 	};
 
-  private _onChange(): void {		
+  private _onChangeTasks(): void {		
     this.setState({
-      results: listStore.getSearchResults(),
+      tasks: listStore.getSearchResults(),
       loaded: true
     });
   }
 
   public componentDidMount(nextProps: ITasksSpfxProps): void {
 		// Get the new results
-    listStore.addChangeListener(this._onChange);
+    listStore.addChangeListener(this._onChangeTasks);
 		this._getResults(this.props);
 	}
 
-	private _getResults(crntProps: ITasksSpfxProps): void {		
-			listActions.get(crntProps.context, crntProps.context.pageContext.user.loginName, crntProps.title, 10, "Descending", "ID");
+	private _getResults(crntProps: ITasksSpfxProps): void {		      
+			listActions.get(crntProps.context, crntProps.context.pageContext.user.loginName, crntProps.title, 10, "Descending", "ID");      
 	}
 
-  public render(): JSX.Element {
-    let taskTable = (
-      <Panel>
-        <BootstrapTable data={ this.state.results } striped hover condensed>
-          <TableHeaderColumn dataField='ID' isKey>ID</TableHeaderColumn>
-          <TableHeaderColumn dataField='AssignedUsersDisplay'>Asignado</TableHeaderColumn>
-          <TableHeaderColumn dataField='Title'>Título</TableHeaderColumn>
-          <TableHeaderColumn dataField='Status'>Status</TableHeaderColumn>
-          <TableHeaderColumn dataField='Priority'>Prioridad</TableHeaderColumn>
-          <TableHeaderColumn dataField='StartDate'>Fecha de Inicio</TableHeaderColumn>
-          <TableHeaderColumn dataField='DueDate'>Fecha de Vencimiento</TableHeaderColumn>
-        </BootstrapTable>
-      </Panel>);
+  public render(): JSX.Element {    
 
     let tabsInstance = (
       <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
-        <Tab eventKey={1}  title="Tab 1">{taskTable}</Tab>
-        <Tab eventKey={2}  title="Tab 2">Tab 2 content</Tab>
+        <Tab eventKey={1} title="Tab 1">{ this.state.tasks.length && <PendingTasksTable tasks={this.state.tasks} />}</Tab>
+        <Tab eventKey={2} title="Tab 2"><ContactsTable context={this.props.context} /></Tab>
         <Tab eventKey={3} title="Tab 3" disabled>Tab 3 content</Tab>
       </Tabs>
     );

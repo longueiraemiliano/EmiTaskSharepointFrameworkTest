@@ -4,6 +4,7 @@ import listActionIDs from '../actions/listActionIDs';
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 // import { ISearchResults, ICells, ICellValue } from '../../utils/ISearchResults';
 import { ITaskResults, ITaskResult } from '../../utils/ITaskResult';
+import { IContactResults, IContactResult } from '../../utils/IContactResult';
 
 import { EventEmitter } from 'fbemitter';
 
@@ -16,6 +17,7 @@ const CHANGE_EVENT: string = 'change';
 
 export class ListStoreStatic extends EventEmitter {
 	private _results: any[] = [];
+	private _contacts: IContactResult[] = [];
 	private _url: string;
 	private _response: any;
 
@@ -37,21 +39,15 @@ export class ListStoreStatic extends EventEmitter {
 
     public emitChange(): void {
         this.emit(CHANGE_EVENT);
-    }		
+    }
 
 	public getSearchResults(): ITaskResult[] {
 		return this._results;
 	}
 
-	/**
-	 * @param {IWebPartContext} context
-	 * @param {string} url
-	 */
-	// public GetSearchData (context: IWebPartContext, url: string): Promise<ISearchResults> {
-	// 	return context.spHttpClient.get(url, SPHttpClient.configurations.v1).then((res: Response) => {
-	// 		return res.json();
-	// 	});
-	// }
+	public getContactsResults(): IContactResult[] {
+		return this._contacts;
+	}
 
 	public GetListTasks(context: IWebPartContext, url: string): Promise<ITaskResults> {
 		return context.spHttpClient.get(context.pageContext.web.absoluteUrl + url, SPHttpClient.configurations.v1)
@@ -60,9 +56,12 @@ export class ListStoreStatic extends EventEmitter {
 		});
 	}
 
-    public GetUserTasks(context: IWebPartContext, url: string) {
-        
-    }
+	public GetContacts(context: IWebPartContext, url: string): Promise<IContactResults> {
+		return context.spHttpClient.get(context.pageContext.web.absoluteUrl + url, SPHttpClient.configurations.v1)
+		.then((response: SPHttpClientResponse) => {
+			return response.json();
+		});
+	}
 
 	/**
 	 * @param {string} value
@@ -108,6 +107,10 @@ export class ListStoreStatic extends EventEmitter {
 			this._results = [];
 		}
 	}
+
+	public setContactResults(result: IContactResult[]){
+		this._contacts = result;
+	}
 }
 
 const listStore: ListStoreStatic = new ListStoreStatic();
@@ -115,18 +118,19 @@ const listStore: ListStoreStatic = new ListStoreStatic();
 appDispatcher.register((action) => {
 	switch (action.actionType) {
 		case listActionIDs.TASKS_GET:			
-			let resultsRetrieved = false;
-			// if (res !== null) {				
-			// }
-
-			// Reset the store its search result set on error
-			// if (!resultsRetrieved) {
-			// 	searchStore.setSearchResults([], null);
-			// }
-			let url = "/_api/web/lists/GetByTitle('" + action.listName + "')/items/?$select=ID,Title,Body,DueDate,StartDate,Priority,Status,AssignedTo/FirstName,AssignedTo/LastName,AssignedTo/Name,AssignedTo/Id&$expand=AssignedTo/Id";
+			var resultsRetrieved = false;						
+			var url = "/_api/web/lists/GetByTitle('" + action.listName + "')/items/?$select=ID,Title,Body,DueDate,StartDate,Priority,Status,AssignedTo/FirstName,AssignedTo/LastName,AssignedTo/Name,AssignedTo/Id&$expand=AssignedTo/Id";
 			listStore.GetListTasks(action.context, url).then((res: ITaskResults) => {
 				resultsRetrieved = true;
 				listStore.setTasksResults(res.value, action.context);
+				listStore.emitChange();					
+			});							
+		break;
+		case listActionIDs.CONTACTS_GET:			
+			var resultsRetrieved = false;			
+			var url = "/_api/web/lists/GetByTitle('" + action.listName + "')/items/?$select=ID,Title,Email,FirstName,LastName,Phone";
+			listStore.GetContacts(action.context, url).then((res: IContactResults) => {				
+				listStore.setContactResults(res.value);
 				listStore.emitChange();					
 			});							
 		break;
