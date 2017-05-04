@@ -1,6 +1,7 @@
 import appDispatcher from '../dispatcher/appDispatcher';
 import listActionIDs from './listActionIDs';
 import {IWebPartContext} from '@microsoft/sp-webpart-base';
+import { IContactForm } from '../../components/ContactForm/ContactForm';
 
 export class ListActionsStatic {
 	/**
@@ -24,6 +25,15 @@ export class ListActionsStatic {
 			actionType: listActionIDs.CONTACTS_GET,
 			context: context,			
             listName: listName,			
+		});
+	}
+
+	public addContact(context: IWebPartContext, listName: string, contact: IContactForm) {
+		appDispatcher.dispatch({
+			actionType: listActionIDs.ADD_CONTACT,
+			context: context,			
+            listName: listName,			
+			contact: contact
 		});
 	}
 }

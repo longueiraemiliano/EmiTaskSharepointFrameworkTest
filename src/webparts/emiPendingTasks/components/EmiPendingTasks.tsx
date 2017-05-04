@@ -10,6 +10,7 @@ import listStore from '../flux/stores/listStore';
 import { ITaskResult } from '../utils/ITaskResult';
 import PendingTasksTable from './PendingTasksTable/PendingTasksTable';
 import ContactsTable from './ContactsTable/ContactsTable';
+import ContactForm from './ContactForm/ContactForm';
 
 export interface ITasksSpfxProps extends IEmiPendingTasksWebPartProps {
 	context: IWebPartContext;
@@ -55,16 +56,18 @@ export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IC
 
     let tabsInstance = (
       <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
-        <Tab eventKey={1} title="Tab 1">{ this.state.tasks.length && <PendingTasksTable tasks={this.state.tasks} />}</Tab>
-        <Tab eventKey={2} title="Tab 2"><ContactsTable context={this.props.context} /></Tab>
-        <Tab eventKey={3} title="Tab 3" disabled>Tab 3 content</Tab>
+        <Tab eventKey={1} title="Tareas">{ this.state.tasks.length && <PendingTasksTable tasks={this.state.tasks} />}</Tab>
+        <Tab eventKey={2} title="Contactos"><ContactsTable context={this.props.context} /></Tab>
+        <Tab eventKey={3} title="Form Contactos"><ContactForm context={this.props.context} /></Tab>
       </Tabs>
     );
 
     return (            
-      <div className="container">        
-        {tabsInstance}        
-      </div>
+      <Grid>
+        <Row>
+          <Col lg={7}>{tabsInstance}</Col>
+        </Row>  
+      </Grid>
     );    
   }
 }

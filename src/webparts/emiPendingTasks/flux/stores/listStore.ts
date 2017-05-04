@@ -1,16 +1,13 @@
 import appDispatcher from '../dispatcher/appDispatcher';
 import listActionIDs from '../actions/listActionIDs';
-
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
-// import { ISearchResults, ICells, ICellValue } from '../../utils/ISearchResults';
 import { ITaskResults, ITaskResult } from '../../utils/ITaskResult';
 import { IContactResults, IContactResult } from '../../utils/IContactResult';
-
 import { EventEmitter } from 'fbemitter';
-
 import {
   SPHttpClient,
-  SPHttpClientResponse   
+  SPHttpClientResponse,
+  ISPHttpClientOptions   
 } from '@microsoft/sp-http';
 
 const CHANGE_EVENT: string = 'change';
@@ -89,6 +86,16 @@ export class ListStoreStatic extends EventEmitter {
 		};
 	}
 
+	public addContact(context: IWebPartContext, httpClientOptions: ISPHttpClientOptions, url: string): Promise<IContactResult> {                
+        return context.spHttpClient.post(context.pageContext.web.absoluteUrl + url, SPHttpClient.configurations.v1, httpClientOptions).then((response: SPHttpClientResponse) => {
+			return response.json();
+		});
+    }
+
+	public addContactToList(contact: IContactResult){
+		this._contacts.push(contact);
+	}
+
 	public setTasksResults(crntResults: ITaskResult[], context: IWebPartContext): void {
 		if (crntResults.length > 0) {			
 			const temp: any[] = [];
@@ -133,6 +140,30 @@ appDispatcher.register((action) => {
 				listStore.setContactResults(res.value);
 				listStore.emitChange();					
 			});							
+		break;
+		case listActionIDs.ADD_CONTACT:
+			debugger;
+			var url = "/_api/Lists/getByTitle('" + action.listName + "')/items";
+        
+			const httpClientOptions: ISPHttpClientOptions = {
+				body:JSON.stringify({
+					Title: action.contact.apellido,
+					FirstName: action.contact.nombre,
+					LastName: action.contact.apellido,
+					Phone: action.contact.phone,
+					Email: action.contact.email
+				})
+			};
+			
+			listStore.addContact(action.context, httpClientOptions, url).then((res: IContactResult) => {
+				
+				// var url = "/_api/web/lists/GetByTitle('" + action.listName + "')/items/?$select=ID,Title,Email,FirstName,LastName,Phone";
+				// listStore.GetContacts(action.context, url).then((res: IContactResults) => {				
+				// 	listStore.setContactResults(res.value);
+					listStore.addContactToList(res);
+					listStore.emitChange();					
+				// });
+			});
 		break;
 	}
 });
