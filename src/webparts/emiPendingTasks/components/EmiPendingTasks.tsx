@@ -59,6 +59,7 @@ export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IC
 
   private renderFormEdit(item) {
     this.handleSelect(3);
+    this.render();
   }
 
   private renderContacts() {
@@ -74,7 +75,7 @@ export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IC
     let tabsInstance = (
       <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="uncontrolled-tab-example">
         <Tab eventKey={1} title="Tareas">{ this.state.tasks.length && <PendingTasksTable tasks={this.state.tasks} />}</Tab>
-        <Tab eventKey={2} title="Contactos"><ContactsTable callBack={this.renderFormEdit} context={this.props.context} /></Tab>
+        <Tab eventKey={2} title="Contactos"><ContactsTable callBack={this.renderFormEdit} context={this.props.context} /></Tab>        
         <Tab eventKey={3} title="Form Contactos"><ContactForm callBack={this.renderContacts} context={this.props.context} /></Tab>
       </Tabs>
     );
