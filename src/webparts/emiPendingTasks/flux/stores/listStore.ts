@@ -141,8 +141,7 @@ appDispatcher.register((action) => {
 				listStore.emitChange();					
 			});							
 		break;
-		case listActionIDs.ADD_CONTACT:
-			debugger;
+		case listActionIDs.ADD_CONTACT:			
 			var url = "/_api/Lists/getByTitle('" + action.listName + "')/items";
         
 			const httpClientOptions: ISPHttpClientOptions = {

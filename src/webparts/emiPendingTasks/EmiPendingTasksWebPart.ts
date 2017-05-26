@@ -30,6 +30,7 @@ export default class EmiPendingTasksWebPart extends BaseClientSideWebPart<IEmiPe
 
   public render(): void {    
     SPComponentLoader.loadCss('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+    SPComponentLoader.loadCss('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
     SPComponentLoader.loadCss('https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap-table/3.3.0/react-bootstrap-table-all.min.css');        
     const element = this._getElement();
     ReactDom.render(element, this.domElement);

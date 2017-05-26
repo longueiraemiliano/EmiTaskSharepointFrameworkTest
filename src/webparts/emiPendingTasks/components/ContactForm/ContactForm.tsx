@@ -14,7 +14,8 @@ export interface IContactForm {
 }
 
 export interface IContactFormProps {
-	context: IWebPartContext;	
+	context: IWebPartContext;
+    callBack: Function;	
 }
 
 export default class ContactForm extends React.Component<IContactFormProps, IContactForm> {
@@ -34,6 +35,7 @@ export default class ContactForm extends React.Component<IContactFormProps, ICon
         this.handleChangePhone = this.handleChangePhone.bind(this);
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
         this.addContact = this.addContact.bind(this);
+        this._onChange = this._onChange.bind(this);
 	};
  
     private getValidationState() {
@@ -60,9 +62,14 @@ export default class ContactForm extends React.Component<IContactFormProps, ICon
     }
 
     private addContact(e) {
-        e.preventDefault();
-        debugger;
-        listActions.addContact(this.props.context, 'Contacts', this.state);
+        e.preventDefault();        
+        listStore.addChangeListener(this._onChange);
+        listActions.addContact(this.props.context, 'Contacts', this.state);        
+    }
+
+    private _onChange() {
+        this.setState({ nombre: '', apellido: '', phone: '', email: '' });
+        this.props.callBack();
     }
 
     public render(): JSX.Element {           

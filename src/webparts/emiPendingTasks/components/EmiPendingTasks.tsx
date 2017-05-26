@@ -21,6 +21,7 @@ export interface ITasksSpfxProps extends IEmiPendingTasksWebPartProps {
 export interface IContainerState {
   tasks?: ITaskResult[];
 	loaded?: Boolean;	
+  key?: Number;
 }
 
 export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IContainerState> {  
@@ -29,10 +30,14 @@ export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IC
 		super(props, context);
 		this.state = {
 			tasks: [],
-			loaded: false
+			loaded: false,
+      key: 2
 		};
     
 		this._onChangeTasks = this._onChangeTasks.bind(this);
+    this.renderContacts = this.renderContacts.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.renderFormEdit = this.renderFormEdit.bind(this);
 	};
 
   private _onChangeTasks(): void {		
@@ -52,13 +57,25 @@ export default class EmiPendingTasks extends React.Component<ITasksSpfxProps, IC
 			listActions.get(crntProps.context, crntProps.context.pageContext.user.loginName, crntProps.title, 10, "Descending", "ID");      
 	}
 
+  private renderFormEdit(item) {
+    this.handleSelect(3);
+  }
+
+  private renderContacts() {
+    this.handleSelect(2);
+  }
+
+  private handleSelect(key) {    
+    this.setState({key});
+  }
+
   public render(): JSX.Element {    
 
     let tabsInstance = (
-      <Tabs defaultActiveKey={2} id="uncontrolled-tab-example">
+      <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="uncontrolled-tab-example">
         <Tab eventKey={1} title="Tareas">{ this.state.tasks.length && <PendingTasksTable tasks={this.state.tasks} />}</Tab>
-        <Tab eventKey={2} title="Contactos"><ContactsTable context={this.props.context} /></Tab>
-        <Tab eventKey={3} title="Form Contactos"><ContactForm context={this.props.context} /></Tab>
+        <Tab eventKey={2} title="Contactos"><ContactsTable callBack={this.renderFormEdit} context={this.props.context} /></Tab>
+        <Tab eventKey={3} title="Form Contactos"><ContactForm callBack={this.renderContacts} context={this.props.context} /></Tab>
       </Tabs>
     );
 
